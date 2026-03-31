@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: day1vizov_postgres
+    environment:
+      POSTGRES_DB: Day1VizovDb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: light5890apobeg0rl5A
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    container_name: day1vizov_api
+    ports:
+      - "5000:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=Day1VizovDb;Username=postgres;Password=light5890apobeg0rl5A
+      - Jwt__Key=Day1VizovSuperSecretKey2026AndSuperPuperDuperLongTextVeryLong
+      - Jwt__Issuer=Day1Vizov
+      - Jwt__Audience=Day1VizovAPI
+      - ASPNETCORE_ENVIRONMENT=Development
+    volumes:
+      - ./logs:/app/logs
+
+volumes:
+  postgres_data:
