@@ -1,0 +1,6 @@
+@Day1Vizov_HostAddress = http://localhost:5037
+
+GET {{Day1Vizov_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
